@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "케어링크 돌봄 플랫폼"
+version = "1.0.0"
+id = "artifacts/carelink"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25302
+
+[services.development]
+run = "pnpm --filter @workspace/carelink run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/carelink", "run", "build" ]
+publicDir = "artifacts/carelink/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25302"
+BASE_PATH = "/"

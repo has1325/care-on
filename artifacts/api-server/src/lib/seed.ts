@@ -1,0 +1,261 @@
+import { db } from "@workspace/db";
+import {
+  caregiversTable,
+  plansTable,
+  programsTable,
+  reviewsTable,
+} from "@workspace/db";
+import { logger } from "./logger";
+
+export async function seedIfEmpty() {
+  const existing = await db.select().from(caregiversTable).limit(1);
+  if (existing.length > 0) return;
+
+  logger.info("Seeding initial data...");
+
+  await db.insert(caregiversTable).values([
+    {
+      name: "김미래",
+      age: 38,
+      gender: "female",
+      photoUrl: null,
+      experienceYears: 7,
+      careType: "child",
+      specialties: ["신생아 케어", "영유아 발달", "영어 교육"],
+      rating: 4.9,
+      reviewCount: 42,
+      region: "서울 강남구",
+      shortBio: "7년 경력의 아이 전문 돌봄 선생님입니다. 영유아부터 초등까지 케어합니다.",
+      fullBio: "보육교사 1급 자격증을 보유한 전문 돌봄 선생님입니다. 아이들의 정서 발달에 특별한 관심을 갖고 있습니다.",
+      certificates: ["보육교사 1급", "응급처치 자격증", "영어회화 지도사"],
+      availableSchedule: ["평일 오전", "평일 오후", "주말 오전"],
+      isAvailable: true,
+      isVerified: true,
+      isInsured: true,
+      hourlyRate: 15000,
+    },
+    {
+      name: "박정호",
+      age: 45,
+      gender: "male",
+      photoUrl: null,
+      experienceYears: 10,
+      careType: "elderly",
+      specialties: ["치매 케어", "재활 보조", "생활 지원"],
+      rating: 4.8,
+      reviewCount: 67,
+      region: "서울 송파구",
+      shortBio: "10년 이상 노인 돌봄 전문가입니다. 치매 어르신도 전문으로 케어합니다.",
+      fullBio: "요양보호사 1급과 사회복지사 자격을 보유하고 있습니다. 어르신의 존엄성을 최우선으로 생각합니다.",
+      certificates: ["요양보호사 1급", "사회복지사 2급", "치매전문교육 수료"],
+      availableSchedule: ["평일 전일", "주말 상담 후 협의"],
+      isAvailable: true,
+      isVerified: true,
+      isInsured: true,
+      hourlyRate: 14000,
+    },
+    {
+      name: "이수진",
+      age: 32,
+      gender: "female",
+      photoUrl: null,
+      experienceYears: 5,
+      careType: "education",
+      specialties: ["수학 지도", "영어 지도", "학습 습관 형성"],
+      rating: 4.7,
+      reviewCount: 28,
+      region: "경기 성남시",
+      shortBio: "교육학과 졸업 후 5년 현장 경험을 가진 교육 돌봄 선생님입니다.",
+      fullBio: "아이들의 학습 흥미를 높이고 자기주도 학습 능력을 키우는 데 집중합니다.",
+      certificates: ["정교사 2급", "학습코칭 전문가", "아동심리상담사"],
+      availableSchedule: ["평일 오후", "주말"],
+      isAvailable: true,
+      isVerified: true,
+      isInsured: true,
+      hourlyRate: 18000,
+    },
+    {
+      name: "최현숙",
+      age: 50,
+      gender: "female",
+      photoUrl: null,
+      experienceYears: 15,
+      careType: "elderly",
+      specialties: ["신체 활동 지원", "복약 관리", "정서 지원"],
+      rating: 5.0,
+      reviewCount: 89,
+      region: "서울 노원구",
+      shortBio: "15년 경력의 베테랑 노인 돌봄 전문가입니다. 가족처럼 정성스럽게 케어합니다.",
+      fullBio: "오랜 경험으로 다양한 상황에 대처할 수 있습니다. 어르신 가족과의 소통도 중요시합니다.",
+      certificates: ["요양보호사 1급", "간호조무사", "노인여가지도사"],
+      availableSchedule: ["전일 가능 (협의)"],
+      isAvailable: false,
+      isVerified: true,
+      isInsured: true,
+      hourlyRate: 16000,
+    },
+    {
+      name: "장민준",
+      age: 29,
+      gender: "male",
+      photoUrl: null,
+      experienceYears: 3,
+      careType: "child",
+      specialties: ["활동적 놀이", "창의 미술", "체육 활동"],
+      rating: 4.6,
+      reviewCount: 15,
+      region: "인천 연수구",
+      shortBio: "체육교육 전공으로 아이들의 건강한 신체 발달을 돕는 남자 돌봄 선생님입니다.",
+      fullBio: "아이들이 신체 활동을 통해 자신감을 키울 수 있도록 돕습니다.",
+      certificates: ["생활체육지도자 2급", "보육교사 2급"],
+      availableSchedule: ["평일 오전", "주말 전일"],
+      isAvailable: true,
+      isVerified: true,
+      isInsured: true,
+      hourlyRate: 13000,
+    },
+    {
+      name: "윤지영",
+      age: 35,
+      gender: "female",
+      photoUrl: null,
+      experienceYears: 8,
+      careType: "living",
+      specialties: ["식사 준비", "청소 정리", "생활 전반 지원"],
+      rating: 4.8,
+      reviewCount: 53,
+      region: "서울 마포구",
+      shortBio: "생활 케어 전문가로 어르신과 아이 모두 케어 가능합니다.",
+      fullBio: "가사 도우미로 시작해 전문 생활 케어리버가 되었습니다. 깔끔하고 꼼꼼한 케어가 장점입니다.",
+      certificates: ["요양보호사 2급", "조리사 자격증"],
+      availableSchedule: ["평일 오전~오후"],
+      isAvailable: true,
+      isVerified: true,
+      isInsured: false,
+      hourlyRate: 12000,
+    },
+  ]);
+
+  await db.insert(plansTable).values([
+    {
+      name: "베이직",
+      slug: "basic",
+      weeklyVisits: 2,
+      monthlyPrice: 200000,
+      features: [
+        "주 2회 방문 돌봄",
+        "기본 케어 서비스",
+        "카카오톡 소통",
+        "월간 케어 리포트",
+      ],
+      isPopular: false,
+      includesEducation: false,
+    },
+    {
+      name: "스탠다드",
+      slug: "standard",
+      weeklyVisits: 5,
+      monthlyPrice: 450000,
+      features: [
+        "주 5회 방문 돌봄",
+        "전문 케어 서비스",
+        "24시간 비상 연락",
+        "주간 케어 리포트",
+        "긴급 대체 인력 지원",
+      ],
+      isPopular: true,
+      includesEducation: false,
+    },
+    {
+      name: "프리미엄",
+      slug: "premium",
+      weeklyVisits: 7,
+      monthlyPrice: 750000,
+      features: [
+        "매일 방문 맞춤 케어",
+        "교육 프로그램 포함",
+        "24시간 긴급 대응",
+        "일일 케어 리포트",
+        "전담 매니저 배정",
+        "가족 상담 서비스",
+      ],
+      isPopular: false,
+      includesEducation: true,
+    },
+  ]);
+
+  await db.insert(programsTable).values([
+    {
+      title: "유아 언어 발달 프로그램",
+      category: "child_education",
+      description:
+        "0~5세 영유아의 언어 발달을 촉진하는 전문 교육 프로그램입니다. 놀이 기반 학습으로 자연스럽게 언어를 발달시킵니다.",
+      duration: "12주 과정",
+      level: "beginner",
+      price: 180000,
+      enrolledCount: 234,
+    },
+    {
+      title: "노인 인지 활성화 케어",
+      category: "elderly_cognitive",
+      description:
+        "치매 예방과 인지 기능 향상을 위한 전문 케어 프로그램입니다. 두뇌 활성화 활동과 생활 인지 훈련을 병행합니다.",
+      duration: "8주 과정",
+      level: "intermediate",
+      price: 150000,
+      enrolledCount: 167,
+    },
+    {
+      title: "아동 정서 케어 프로그램",
+      category: "emotional_care",
+      description:
+        "아이들의 감정 조절과 사회성 발달을 돕는 정서 케어 프로그램입니다. 전문 심리 상담사와 함께합니다.",
+      duration: "6주 과정",
+      level: "beginner",
+      price: 120000,
+      enrolledCount: 189,
+    },
+    {
+      title: "시니어 생활 케어 교실",
+      category: "life_care",
+      description:
+        "어르신의 일상 생활 능력 향상과 독립적 생활을 돕는 종합 케어 프로그램입니다.",
+      duration: "10주 과정",
+      level: "beginner",
+      price: 130000,
+      enrolledCount: 98,
+    },
+  ]);
+
+  await db.insert(reviewsTable).values([
+    {
+      caregiverId: 1,
+      caregiverName: "김미래",
+      authorName: "이*수 부모님",
+      rating: 5,
+      content:
+        "아이가 선생님과 정말 잘 놀고, 항상 안전하게 케어해주셔서 너무 믿음직스럽습니다. 덕분에 출근할 때 마음이 편해요.",
+      careType: "child",
+    },
+    {
+      caregiverId: 2,
+      caregiverName: "박정호",
+      authorName: "김*철 가족",
+      rating: 5,
+      content:
+        "치매 초기이신 어머니를 정말 가족처럼 케어해주십니다. 어머니도 선생님을 너무 좋아하세요. 정말 감사합니다.",
+      careType: "elderly",
+    },
+    {
+      caregiverId: 3,
+      caregiverName: "이수진",
+      authorName: "박*현 부모님",
+      rating: 5,
+      content:
+        "수학을 싫어하던 아이가 이제 수학을 즐기게 됐어요! 선생님의 교육 방식이 정말 효과적입니다.",
+      careType: "education",
+    },
+  ]);
+
+  logger.info("Seeding complete.");
+}

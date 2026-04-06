@@ -3,20 +3,37 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CareLink 돌봄 플랫폼 API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: caregivers
+    description: 돌봄 인력 관련
+  - name: services
+    description: 서비스 유형
+  - name: bookings
+    description: 예약/매칭
+  - name: emergency
+    description: 긴급 요청
+  - name: reviews
+    description: 후기
+  - name: plans
+    description: 구독 플랜
+  - name: programs
+    description: 교육 프로그램
+  - name: consultations
+    description: 상담 신청
+  - name: matching
+    description: 매칭 현황
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +41,317 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /caregivers:
+    get:
+      operationId: listCaregivers
+      tags: [caregivers]
+      summary: 돌봄 인력 목록 (필터 검색)
+      parameters:
+        - name: region
+          in: query
+          schema:
+            type: string
+        - name: careType
+          in: query
+          schema:
+            type: string
+            enum: [child, elderly, education, living]
+        - name: gender
+          in: query
+          schema:
+            type: string
+            enum: [male, female, any]
+        - name: minExperience
+          in: query
+          schema:
+            type: integer
+        - name: available
+          in: query
+          schema:
+            type: boolean
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: 돌봄 인력 목록
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaregiverListResponse"
+    post:
+      operationId: createCaregiver
+      tags: [caregivers]
+      summary: 돌봄 인력 등록
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCaregiverBody"
+      responses:
+        "201":
+          description: 등록 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Caregiver"
+
+  /caregivers/{id}:
+    get:
+      operationId: getCaregiver
+      tags: [caregivers]
+      summary: 돌봄 인력 상세 프로필
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 상세 프로필
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaregiverDetail"
+
+  /caregivers/featured:
+    get:
+      operationId: getFeaturedCaregivers
+      tags: [caregivers]
+      summary: 추천 돌봄 인력 (메인 페이지용)
+      responses:
+        "200":
+          description: 추천 인력 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Caregiver"
+
+  /matching/status:
+    get:
+      operationId: getMatchingStatus
+      tags: [matching]
+      summary: 실시간 매칭 현황
+      responses:
+        "200":
+          description: 매칭 상태 정보
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchingStatus"
+
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: 예약 목록
+      responses:
+        "200":
+          description: 예약 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: 예약 신청
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookingBody"
+      responses:
+        "201":
+          description: 예약 생성
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: 예약 상세
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: 예약 상세
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /emergency:
+    post:
+      operationId: createEmergencyRequest
+      tags: [emergency]
+      summary: 긴급 돌봄 요청
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEmergencyRequestBody"
+      responses:
+        "201":
+          description: 긴급 요청 접수
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmergencyRequest"
+    get:
+      operationId: listEmergencyRequests
+      tags: [emergency]
+      summary: 긴급 요청 목록
+      responses:
+        "200":
+          description: 긴급 요청 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmergencyRequest"
+
+  /reviews:
+    get:
+      operationId: listReviews
+      tags: [reviews]
+      summary: 후기 목록
+      parameters:
+        - name: caregiverId
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: 후기 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+    post:
+      operationId: createReview
+      tags: [reviews]
+      summary: 후기 작성
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewBody"
+      responses:
+        "201":
+          description: 후기 작성 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /plans:
+    get:
+      operationId: listPlans
+      tags: [plans]
+      summary: 구독 플랜 목록
+      responses:
+        "200":
+          description: 구독 플랜 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Plan"
+
+  /programs:
+    get:
+      operationId: listPrograms
+      tags: [programs]
+      summary: 교육 프로그램 목록
+      responses:
+        "200":
+          description: 교육 프로그램 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Program"
+
+  /consultations:
+    post:
+      operationId: createConsultation
+      tags: [consultations]
+      summary: 상담 신청
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateConsultationBody"
+      responses:
+        "201":
+          description: 상담 신청 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Consultation"
+    get:
+      operationId: listConsultations
+      tags: [consultations]
+      summary: 상담 신청 목록
+      responses:
+        "200":
+          description: 상담 목록
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Consultation"
+
+  /stats/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [matching]
+      summary: 대시보드 통계 (관리자/메인 페이지)
+      responses:
+        "200":
+          description: 통계 데이터
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +362,487 @@ components:
       required:
         - status
 
+    Caregiver:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        age:
+          type: integer
+        gender:
+          type: string
+          enum: [male, female]
+        photoUrl:
+          type: string
+        experienceYears:
+          type: integer
+        careType:
+          type: string
+          enum: [child, elderly, education, living]
+        specialties:
+          type: array
+          items:
+            type: string
+        rating:
+          type: number
+          format: float
+        reviewCount:
+          type: integer
+        region:
+          type: string
+        shortBio:
+          type: string
+        isAvailable:
+          type: boolean
+        isVerified:
+          type: boolean
+        isInsured:
+          type: boolean
+        hourlyRate:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - age
+        - gender
+        - experienceYears
+        - careType
+        - rating
+        - reviewCount
+        - region
+        - shortBio
+        - isAvailable
+        - isVerified
+        - isInsured
+        - hourlyRate
+        - createdAt
+
+    CaregiverDetail:
+      allOf:
+        - $ref: "#/components/schemas/Caregiver"
+        - type: object
+          properties:
+            fullBio:
+              type: string
+            certificates:
+              type: array
+              items:
+                type: string
+            availableSchedule:
+              type: array
+              items:
+                type: string
+            videoUrl:
+              type: string
+            languages:
+              type: array
+              items:
+                type: string
+
+    CaregiverListResponse:
+      type: object
+      properties:
+        caregivers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Caregiver"
+        total:
+          type: integer
+        hasMore:
+          type: boolean
+      required:
+        - caregivers
+        - total
+        - hasMore
+
+    CreateCaregiverBody:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+        gender:
+          type: string
+          enum: [male, female]
+        experienceYears:
+          type: integer
+        careType:
+          type: string
+          enum: [child, elderly, education, living]
+        region:
+          type: string
+        shortBio:
+          type: string
+        hourlyRate:
+          type: integer
+      required:
+        - name
+        - age
+        - gender
+        - experienceYears
+        - careType
+        - region
+        - shortBio
+        - hourlyRate
+
+    MatchingStatus:
+      type: object
+      properties:
+        availableCaregivers:
+          type: integer
+        isMatchingAvailable:
+          type: boolean
+        averageMatchMinutes:
+          type: integer
+        activeRequests:
+          type: integer
+      required:
+        - availableCaregivers
+        - isMatchingAvailable
+        - averageMatchMinutes
+        - activeRequests
+
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+        caregiverId:
+          type: integer
+        caregiverName:
+          type: string
+        careType:
+          type: string
+        region:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        hoursPerDay:
+          type: integer
+        status:
+          type: string
+          enum: [pending, confirmed, completed, cancelled]
+        totalAmount:
+          type: integer
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - caregiverId
+        - caregiverName
+        - careType
+        - region
+        - startDate
+        - status
+        - totalAmount
+        - createdAt
+
+    CreateBookingBody:
+      type: object
+      properties:
+        caregiverId:
+          type: integer
+        careType:
+          type: string
+        region:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        hoursPerDay:
+          type: integer
+        notes:
+          type: string
+      required:
+        - caregiverId
+        - careType
+        - region
+        - startDate
+        - hoursPerDay
+
+    EmergencyRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        region:
+          type: string
+        careType:
+          type: string
+          enum: [child, elderly]
+        requestTime:
+          type: string
+        isUrgent:
+          type: boolean
+        description:
+          type: string
+        status:
+          type: string
+          enum: [pending, matching, matched, completed]
+        matchedCaregiverId:
+          type: integer
+        contactPhone:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - region
+        - careType
+        - requestTime
+        - isUrgent
+        - status
+        - contactPhone
+        - createdAt
+
+    CreateEmergencyRequestBody:
+      type: object
+      properties:
+        region:
+          type: string
+        careType:
+          type: string
+          enum: [child, elderly]
+        requestTime:
+          type: string
+        isUrgent:
+          type: boolean
+        description:
+          type: string
+        contactPhone:
+          type: string
+      required:
+        - region
+        - careType
+        - requestTime
+        - isUrgent
+        - contactPhone
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        caregiverId:
+          type: integer
+        caregiverName:
+          type: string
+        authorName:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        content:
+          type: string
+        careType:
+          type: string
+        videoUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - caregiverId
+        - caregiverName
+        - authorName
+        - rating
+        - content
+        - careType
+        - createdAt
+
+    CreateReviewBody:
+      type: object
+      properties:
+        caregiverId:
+          type: integer
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        content:
+          type: string
+        careType:
+          type: string
+      required:
+        - caregiverId
+        - rating
+        - content
+        - careType
+
+    Plan:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        weeklyVisits:
+          type: integer
+        monthlyPrice:
+          type: integer
+        features:
+          type: array
+          items:
+            type: string
+        isPopular:
+          type: boolean
+        includesEducation:
+          type: boolean
+      required:
+        - id
+        - name
+        - slug
+        - weeklyVisits
+        - monthlyPrice
+        - features
+        - isPopular
+        - includesEducation
+
+    Program:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        category:
+          type: string
+          enum: [child_education, elderly_cognitive, emotional_care, life_care]
+        description:
+          type: string
+        duration:
+          type: string
+        level:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        price:
+          type: integer
+        imageUrl:
+          type: string
+        enrolledCount:
+          type: integer
+      required:
+        - id
+        - title
+        - category
+        - description
+        - duration
+        - level
+        - price
+        - enrolledCount
+
+    Consultation:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        careType:
+          type: string
+        preferredTime:
+          type: string
+        message:
+          type: string
+        consultationType:
+          type: string
+          enum: [phone, kakao, visit]
+        status:
+          type: string
+          enum: [pending, scheduled, completed]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - phone
+        - careType
+        - consultationType
+        - status
+        - createdAt
+
+    CreateConsultationBody:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        careType:
+          type: string
+        preferredTime:
+          type: string
+        message:
+          type: string
+        consultationType:
+          type: string
+          enum: [phone, kakao, visit]
+      required:
+        - name
+        - phone
+        - careType
+        - consultationType
+
+    DashboardStats:
+      type: object
+      properties:
+        totalCaregivers:
+          type: integer
+        totalBookings:
+          type: integer
+        totalReviews:
+          type: integer
+        averageRating:
+          type: number
+        totalConsultations:
+          type: integer
+        emergencyRequestsToday:
+          type: integer
+        careTypeBreakdown:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              count:
+                type: integer
+            required:
+              - type
+              - count
+      required:
+        - totalCaregivers
+        - totalBookings
+        - totalReviews
+        - averageRating
+        - totalConsultations
+        - emergencyRequestsToday
+        - careTypeBreakdown
