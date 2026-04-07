@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useListCaregivers } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CaregiverCard from "@/components/CaregiverCard";
 import type { ListCaregiversParams } from "@workspace/api-client-react";
+
+const ALL = "__all__";
 
 const regions = ["서울 강남구", "서울 송파구", "서울 노원구", "서울 마포구", "경기 성남시", "인천 연수구"];
 const careTypes = [
@@ -60,14 +61,14 @@ export default function CaregiversPage() {
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">지역</label>
               <Select
-                value={filters.region ?? ""}
-                onValueChange={(v) => setFilters((f) => ({ ...f, region: v || undefined }))}
+                value={filters.region ?? ALL}
+                onValueChange={(v) => setFilters((f) => ({ ...f, region: v === ALL ? undefined : v }))}
               >
                 <SelectTrigger data-testid="select-region">
                   <SelectValue placeholder="전체 지역" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">전체 지역</SelectItem>
+                  <SelectItem value={ALL}>전체 지역</SelectItem>
                   {regions.map((r) => (
                     <SelectItem key={r} value={r}>{r}</SelectItem>
                   ))}
@@ -78,14 +79,14 @@ export default function CaregiversPage() {
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">돌봄 유형</label>
               <Select
-                value={filters.careType ?? ""}
-                onValueChange={(v) => setFilters((f) => ({ ...f, careType: (v || undefined) as typeof f.careType }))}
+                value={filters.careType ?? ALL}
+                onValueChange={(v) => setFilters((f) => ({ ...f, careType: (v === ALL ? undefined : v) as typeof f.careType }))}
               >
                 <SelectTrigger data-testid="select-care-type">
                   <SelectValue placeholder="전체 유형" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">전체 유형</SelectItem>
+                  <SelectItem value={ALL}>전체 유형</SelectItem>
                   {careTypes.map((c) => (
                     <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
                   ))}
@@ -96,14 +97,14 @@ export default function CaregiversPage() {
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">성별</label>
               <Select
-                value={filters.gender ?? ""}
-                onValueChange={(v) => setFilters((f) => ({ ...f, gender: (v || undefined) as typeof f.gender }))}
+                value={filters.gender ?? ALL}
+                onValueChange={(v) => setFilters((f) => ({ ...f, gender: (v === ALL ? undefined : v) as typeof f.gender }))}
               >
                 <SelectTrigger data-testid="select-gender">
                   <SelectValue placeholder="전체" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">전체</SelectItem>
+                  <SelectItem value={ALL}>전체</SelectItem>
                   <SelectItem value="female">여성</SelectItem>
                   <SelectItem value="male">남성</SelectItem>
                 </SelectContent>
@@ -113,14 +114,14 @@ export default function CaregiversPage() {
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block">최소 경력 (년)</label>
               <Select
-                value={filters.minExperience?.toString() ?? ""}
-                onValueChange={(v) => setFilters((f) => ({ ...f, minExperience: v ? parseInt(v) : undefined }))}
+                value={filters.minExperience?.toString() ?? ALL}
+                onValueChange={(v) => setFilters((f) => ({ ...f, minExperience: v === ALL ? undefined : parseInt(v) }))}
               >
                 <SelectTrigger data-testid="select-experience">
                   <SelectValue placeholder="전체" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">전체</SelectItem>
+                  <SelectItem value={ALL}>전체</SelectItem>
                   <SelectItem value="1">1년 이상</SelectItem>
                   <SelectItem value="3">3년 이상</SelectItem>
                   <SelectItem value="5">5년 이상</SelectItem>
