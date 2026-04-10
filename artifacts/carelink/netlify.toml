@@ -1,0 +1,20 @@
+[build]
+  command = "npm install -g pnpm && pnpm install && pnpm --filter @workspace/carelink run build"
+  publish = "artifacts/carelink/dist"
+  base = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+  NODE_ENV = "production"
+  BASE_PATH = "/"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://YOUR_API_SERVER_URL/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -235,7 +235,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-foreground">
-              왜 케어링크인가요?
+              왜 케어온인가요?
             </h2>
             <p className="mt-2 text-muted-foreground">
               철저한 검증으로 믿을 수 있는 돌봄을 제공합니다

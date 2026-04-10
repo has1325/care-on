@@ -15,6 +15,7 @@ import ReviewsPage from "@/pages/reviews";
 import ConsultationPage from "@/pages/consultation";
 import MypagePage from "@/pages/mypage";
 import AdminPage from "@/pages/admin";
+import JobsPage from "@/pages/jobs";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,7 @@ function Router() {
         <Route path="/pricing" component={PricingPage} />
         <Route path="/programs" component={ProgramsPage} />
         <Route path="/reviews" component={ReviewsPage} />
+        <Route path="/jobs" component={JobsPage} />
         <Route path="/consultation" component={ConsultationPage} />
         <Route path="/mypage" component={MypagePage} />
         <Route path="/admin" component={AdminPage} />
