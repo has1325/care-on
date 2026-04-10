@@ -6,3 +6,9 @@ id = "IAN-_RB_ui6t6ee75tGrW"
 uri = "file://carelink-project.zip"
 type = "unspecified"
 title = "케어링크 소스 코드 (245개 파일, 1.8MB)"
+
+[[outputs]]
+id = "ZfQv60Rwr2_D4i_7AbyZy"
+uri = "file://carelink-netlify.zip"
+type = "unspecified"
+title = "케어링크 네트리파이 배포용 (7개 파일, 1.7MB)"
