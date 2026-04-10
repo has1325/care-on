@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "IAN-_RB_ui6t6ee75tGrW"
+uri = "file://carelink-project.zip"
+type = "unspecified"
+title = "케어링크 소스 코드 (245개 파일, 1.8MB)"
