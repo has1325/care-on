@@ -8,7 +8,8 @@ const isProduction = process.env.NODE_ENV === "production";
 const rawPort = process.env.PORT;
 const port = rawPort ? Number(rawPort) : 3000;
 
-const basePath = process.env.BASE_PATH ?? "/";
+// Dev: use BASE_PATH env var; Production (Netlify): use "./" for relative asset paths
+const basePath = isProduction ? "./" : (process.env.BASE_PATH ?? "/");
 
 export default defineConfig({
   base: basePath,
