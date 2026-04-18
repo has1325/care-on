@@ -23,6 +23,8 @@ interface Props {
 }
 
 export default function CaregiverCard({ caregiver }: Props) {
+  if (!caregiver) return null;
+
   return (
     <div
       className="bg-card rounded-2xl border border-card-border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
