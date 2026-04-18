@@ -67,8 +67,23 @@ const trustItems = [
 ];
 
 export default function HomePage() {
-  const { data: featuredCaregivers } = useGetFeaturedCaregivers();
+  const { data } = useGetFeaturedCaregivers();
   const { data: matchingStatus } = useGetMatchingStatus();
+
+  let caregivers: any[] = [];
+
+  try {
+    if (Array.isArray(data)) {
+      caregivers = data;
+    } else if (data && typeof data === "object" && Array.isArray((data as any).data)) {
+      caregivers = (data as any).data;
+    } else {
+      caregivers = [];
+    }
+  } catch (e) {
+    console.error("데이터 파싱 실패", e);
+    caregivers = [];
+  }
 
   return (
     <div className="min-h-screen">
