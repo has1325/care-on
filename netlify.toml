@@ -1,6 +1,6 @@
 [build]
   command = "cd artifacts/carelink && npm run build"
-  publish = "artifacts/carelink/dist"
+  publish = "dist"
 
 [[redirects]]
   from = "/*"
