@@ -1,5 +1,5 @@
 [build]
-  command = "cd artifacts/carelink && npm install && npm run build"
+  command = "cd artifacts/carelink && corepack enable && pnpm install && pnpm run build"
   publish = "artifacts/carelink/dist"
 
 [[redirects]]
