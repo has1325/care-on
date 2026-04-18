@@ -70,6 +70,12 @@ export default function HomePage() {
   const { data: featuredCaregivers } = useGetFeaturedCaregivers();
   const { data: matchingStatus } = useGetMatchingStatus();
 
+  const caregivers = Array.isArray(featuredCaregivers)
+    ? featuredCaregivers
+    : Array.isArray((featuredCaregivers as any)?.data)
+      ? (featuredCaregivers as any).data
+      : [];
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -182,22 +188,20 @@ export default function HomePage() {
               </Button>
             </Link>
           </div>
-          {featuredCaregivers ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {featuredCaregivers.map((cg) => (
-                <CaregiverCard key={cg.id} caregiver={cg} />
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {[1, 2, 3].map((i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {caregivers.length > 0 ? (
+              caregivers.map((cg: any) => (
+                <CaregiverCard key={cg?.id ?? Math.random()} caregiver={cg} />
+              ))
+            ) : (
+              [1, 2, 3].map((i) => (
                 <div
                   key={i}
                   className="h-64 rounded-2xl bg-muted animate-pulse"
                 />
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
         </div>
       </section>
 
