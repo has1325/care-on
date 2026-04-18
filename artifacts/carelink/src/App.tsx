@@ -58,7 +58,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base="">
+        <WouterRouter> {/* 🔥 base 제거 */}
           <Router />
         </WouterRouter>
         <Toaster />
