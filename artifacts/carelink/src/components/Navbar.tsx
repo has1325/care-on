@@ -23,7 +23,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" data-testid="link-logo">
             <span className="text-2xl font-bold text-primary tracking-tight">
-              케어온
+              허그퓨쳐
             </span>
           </Link>
 
